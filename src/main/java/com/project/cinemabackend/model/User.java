@@ -1,6 +1,7 @@
 package com.project.cinemabackend.model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -78,7 +79,11 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<UserRating> userRatings = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private Set<UserRole> userRoles = new LinkedHashSet<>();
 
 }

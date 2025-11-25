@@ -59,6 +59,10 @@ public class Movie {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    @ColumnDefault("false")
+    @Column(name = "is_upcoming")
+    private Boolean isUpcoming;
+
     @ColumnDefault("0.00")
     @Column(name = "average_rating", precision = 3, scale = 2)
     private BigDecimal averageRating;
@@ -78,6 +82,22 @@ public class Movie {
 
     @OneToOne(mappedBy = "movie")
     private MovieEmbedding movieEmbedding;
+
+    @ColumnDefault("false")
+    @Column(name = "has_subtitles", nullable = false)
+    private Boolean hasSubtitles;
+
+    @ColumnDefault("false")
+    @Column(name = "has_voiceover", nullable = false)
+    private Boolean hasLector;
+
+    @ColumnDefault("false")
+    @Column(name = "has_dubbing", nullable = false)
+    private Boolean hasDubbing;
+
+    @ColumnDefault("true")
+    @Column(name = "is_original_language", nullable = false)
+    private Boolean isOriginalLanguage;
 
     @OneToMany(mappedBy = "movie")
     private Set<MovieGenre> movieGenres = new LinkedHashSet<>();

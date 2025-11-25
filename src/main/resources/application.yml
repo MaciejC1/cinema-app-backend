@@ -22,9 +22,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/cinema-web
+    url: jdbc:postgresql://localhost:5432/postgres
     username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:Kino}
+    password: ${DB_PASSWORD:postgres}
     hikari:
       maximum-pool-size: 20
       minimum-idle: 5

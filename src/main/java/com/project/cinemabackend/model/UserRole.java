@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -16,6 +17,7 @@ import java.util.UUID;
 @Table(name = "user_roles", schema = "public")
 public class UserRole {
     @Id
+    @GeneratedValue
     @ColumnDefault("uuid_generate_v4()")
     @Column(name = "user_role_id", nullable = false)
     private UUID id;
@@ -32,6 +34,7 @@ public class UserRole {
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "assigned_at")
+    @CreationTimestamp
     private OffsetDateTime assignedAt;
 
 }
