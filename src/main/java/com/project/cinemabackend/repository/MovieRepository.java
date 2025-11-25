@@ -29,5 +29,12 @@ public interface MovieRepository extends JpaRepository<Movie, UUID> {
     })
     List<Movie> findByIsActiveTrue();
 
+    @EntityGraph(attributePaths = {
+            "movieDirectors.director",
+            "movieGenres.genre",
+            "media"
+    })
+    List<Movie> findByIsUpcomingTrue();
+
     Movie findMovieById(UUID id);
 }

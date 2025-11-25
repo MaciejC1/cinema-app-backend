@@ -2,6 +2,7 @@ package com.project.cinemabackend.service;
 
 import com.project.cinemabackend.dto.MovieDTO;
 import com.project.cinemabackend.dto.MovieDetailsDTO;
+import com.project.cinemabackend.dto.MovieMinimalDTO;
 import com.project.cinemabackend.mapper.MovieMapper;
 import com.project.cinemabackend.model.Movie;
 import com.project.cinemabackend.repository.MovieRepository;
@@ -26,7 +27,10 @@ public class MovieService {
 
     public MovieDetailsDTO findMovieById(String id) {
         UUID  uuid = UUID.fromString(id);
-        System.out.println(movieRepository.findMovieById(uuid).getMovieGenres());
         return movieMapper.toDetailsDto(movieRepository.findMovieById(uuid));
+    }
+
+    public List<MovieMinimalDTO> findMinMoviesIsUpcoming() {
+        return movieMapper.toMinimalDtoList(movieRepository.findByIsUpcomingTrue());
     }
 }
