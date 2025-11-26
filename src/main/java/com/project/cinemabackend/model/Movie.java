@@ -99,6 +99,9 @@ public class Movie {
     @Column(name = "is_original_language", nullable = false)
     private Boolean isOriginalLanguage;
 
+    @Column(name = "slug", length = 500)
+    private String slug;
+
     @OneToMany(mappedBy = "movie")
     private Set<MovieGenre> movieGenres = new LinkedHashSet<>();
 
