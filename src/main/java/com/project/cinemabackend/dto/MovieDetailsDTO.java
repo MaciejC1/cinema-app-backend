@@ -28,5 +28,6 @@ public record MovieDetailsDTO(
         Boolean isOriginalLanguage,
         @NotEmpty List<String> directors,
         @NotEmpty List<String> genres,
-        @NotEmpty List<MediaDTO> media
+        @NotEmpty List<MediaDTO> media,
+        @NotBlank String slug
 ) {}

@@ -18,6 +18,7 @@ public record MovieDTO(
         @NotNull BigDecimal averageRating,
         @NotEmpty List<String> genres,
         @NotBlank String backdrop,
-        @NotBlank String poster
+        @NotBlank String poster,
+        @NotBlank String slug
 ) {
 }
