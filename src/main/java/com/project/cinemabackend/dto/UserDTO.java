@@ -5,6 +5,6 @@ import java.util.UUID;
 
 public record UserDTO(
         UUID userId,
-        String email,
-        List<String> roles
+        String lastName,
+        String name, List<String> roles
 ) {}
