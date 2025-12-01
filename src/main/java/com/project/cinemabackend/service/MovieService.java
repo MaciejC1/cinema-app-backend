@@ -4,7 +4,6 @@ import com.project.cinemabackend.dto.MovieDTO;
 import com.project.cinemabackend.dto.MovieDetailsDTO;
 import com.project.cinemabackend.dto.MovieMinimalDTO;
 import com.project.cinemabackend.mapper.MovieMapper;
-import com.project.cinemabackend.model.Movie;
 import com.project.cinemabackend.repository.MovieRepository;
 import org.springframework.stereotype.Service;
 
@@ -25,10 +24,14 @@ public class MovieService {
         return movieMapper.toDtoList(movieRepository.findByIsActiveTrue());
     }
 
-    public MovieDetailsDTO findMovieById(String id) {
-        UUID  uuid = UUID.fromString(id);
-        return movieMapper.toDetailsDto(movieRepository.findMovieById(uuid));
+    public MovieDetailsDTO findMovieById(UUID id) {
+        return movieMapper.toDetailsDto(movieRepository.findMovieById(id));
     }
+
+    public MovieDetailsDTO findMovieBySlug(String slug) {
+        return movieMapper.toDetailsDto(movieRepository.findMovieBySlug(slug));
+    }
+
 
     public List<MovieMinimalDTO> findMinMoviesIsUpcoming() {
         return movieMapper.toMinimalDtoList(movieRepository.findByIsUpcomingTrue());

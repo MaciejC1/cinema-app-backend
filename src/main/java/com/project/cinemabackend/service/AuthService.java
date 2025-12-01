@@ -5,10 +5,9 @@ import com.project.cinemabackend.dto.auth.LoginRequest;
 import com.project.cinemabackend.dto.auth.LoginResponse;
 import com.project.cinemabackend.dto.auth.RegisterRequest;
 import com.project.cinemabackend.dto.auth.RegisterResponse;
-import com.project.cinemabackend.model.ExpiredRefreshToken;
-import com.project.cinemabackend.model.Role;
-import com.project.cinemabackend.model.User;
-import com.project.cinemabackend.model.UserRole;
+import com.project.cinemabackend.mapper.UserMapper;
+import com.project.cinemabackend.model.*;
+import com.project.cinemabackend.repository.CinemaRepository;
 import com.project.cinemabackend.repository.ExpiredRefreshTokenRepository;
 import com.project.cinemabackend.repository.RoleRepository;
 import com.project.cinemabackend.repository.UserRepository;
@@ -48,13 +47,17 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final ExpiredRefreshTokenRepository expiredTokenRepository;
     private final boolean secureCookie;
+    private final UserMapper userMapper;
+    private final CinemaRepository cinemaRepository;
 
     private static final long TOKEN_GRACE_PERIOD_SEC = 30;
 
     public AuthService(AuthenticationManager authManager, JwtService jwtService,
                        UserRepository userRepository, RoleRepository roleRepository,
                        PasswordEncoder passwordEncoder, ExpiredRefreshTokenRepository expiredTokenRepository,
-                       @Value("${app.security.cookie.secure:false}") boolean secureCookie) {
+                       @Value("${app.security.cookie.secure:false}") boolean secureCookie,
+                       UserMapper userMapper,
+                       CinemaRepository cinemaRepository) {
         this.authManager = authManager;
         this.jwtService = jwtService;
         this.userRepository = userRepository;
@@ -62,6 +65,8 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
         this.expiredTokenRepository = expiredTokenRepository;
         this.secureCookie = secureCookie;
+        this.userMapper = userMapper;
+        this.cinemaRepository = cinemaRepository;
     }
 
     @Transactional
@@ -82,6 +87,9 @@ public class AuthService {
             String refreshToken = jwtService.generateRefreshToken(user.getId());
 
             setAuthCookies(response, accessToken, refreshToken);
+
+            user.setLastLogin(OffsetDateTime.now(ZoneOffset.UTC));
+            userRepository.save(user);
 
             log.info("User logged in successfully: {}", user.getEmail());
 
@@ -189,11 +197,18 @@ public class AuthService {
         Role role = roleRepository.findByRoleName("ROLE_USER")
                 .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono roli"));
 
-        String hashed = passwordEncoder.encode(request.password());
-
-        User newUser = new User();
-        newUser.setEmail(request.email());
+        User newUser =  userMapper.toEntity(request);
+        String hashed = passwordEncoder.encode(newUser.getPasswordHash());
         newUser.setPasswordHash(hashed);
+
+        if (request.preferredCinemaId() != null) {
+            Cinema cinema = cinemaRepository.findById(request.preferredCinemaId())
+                    .orElseThrow(() -> new IllegalArgumentException("Cinema not found"));
+            newUser.setPreferredCinema(cinema);
+        }
+       /* newUser.setEmail(request.email());
+        newUser.setPasswordHash(hashed);
+        newUser.setIsActive(true);*/
         //newUser.setCreatedAt(Instant.now());
 
         UserRole userRole = new UserRole();

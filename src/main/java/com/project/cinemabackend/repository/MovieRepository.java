@@ -37,4 +37,6 @@ public interface MovieRepository extends JpaRepository<Movie, UUID> {
     List<Movie> findByIsUpcomingTrue();
 
     Movie findMovieById(UUID id);
+
+    Movie findMovieBySlug(String slug);
 }

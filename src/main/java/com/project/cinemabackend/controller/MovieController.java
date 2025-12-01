@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -18,16 +19,23 @@ public class MovieController {
 
     private final MovieService movieService;
 
-    public MovieController(MovieService movieService) { this.movieService = movieService; }
+    public MovieController(MovieService movieService) {
+        this.movieService = movieService;
+    }
 
     @GetMapping("/public/movies/active")
     public ResponseEntity<List<MovieDTO>> getMoviesByIsActive() {
         return ResponseEntity.ok(movieService.findMoviesIsActive());
     }
 
-    @GetMapping("/public/movie/{id}")
-    public ResponseEntity<MovieDetailsDTO> getMovieById(@PathVariable String id) {
+    @GetMapping("/public/movie/id/{id}")
+    public ResponseEntity<MovieDetailsDTO> getMovieById(@PathVariable UUID id) {
         return ResponseEntity.ok(movieService.findMovieById(id));
+    }
+
+    @GetMapping("/public/movie/slug/{slug}")
+    public ResponseEntity<MovieDetailsDTO> getMovieBySlug(@PathVariable String slug) {
+        return ResponseEntity.ok(movieService.findMovieBySlug(slug));
     }
 
     @GetMapping("/public/movies/upcoming")

@@ -6,5 +6,6 @@ import java.util.UUID;
 public record UserDTO(
         UUID userId,
         String lastName,
-        String name, List<String> roles
+        String name,
+        List<String> roles
 ) {}

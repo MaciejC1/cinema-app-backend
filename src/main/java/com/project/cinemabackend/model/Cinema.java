@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.OffsetDateTime;
 import java.util.LinkedHashSet;
@@ -44,6 +45,7 @@ public class Cinema {
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
+    @CreationTimestamp
     private OffsetDateTime createdAt;
 
     @ColumnDefault("true")
