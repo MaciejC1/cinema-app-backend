@@ -43,13 +43,13 @@ public class MovieService {
         return movieMapper.toMinimalDtoList(movieRepository.findByIsUpcomingTrue());
     }
 
-    public List<MovieShowtimesDTO> getMoviesForDateAndGenres(LocalDate date, String genre) {
+    public List<MovieShowtimesDTO> getMoviesForDateAndGenres(LocalDate date, String genre, UUID cinemaId) {
         OffsetDateTime dateConverted = date.atStartOfDay().atOffset(ZoneOffset.UTC);
         OffsetDateTime endDateConverted = dateConverted.plusDays(1);
-        return movieMapper.toDtoMoviesShowtimesList(movieRepository.findMoviesByDateAndGenre(dateConverted,endDateConverted, genre));
+        return movieMapper.toDtoMoviesShowtimesList(movieRepository.findMoviesByDateAndGenre(dateConverted,endDateConverted, genre, cinemaId));
     }
 
-    public MovieShowtimesDTO getMovieForSlug(String slug) {
-        return movieMapper.toDtoMoviesShowtimes(movieRepository.findMovieWithShowtimesBySlug(slug));
+    public MovieShowtimesDTO getMovieForSlug(String slug, UUID cinemaId) {
+        return movieMapper.toDtoMoviesShowtimes(movieRepository.findMovieWithShowtimesBySlug(slug, cinemaId));
     }
 }

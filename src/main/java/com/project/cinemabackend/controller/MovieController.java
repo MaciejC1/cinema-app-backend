@@ -49,16 +49,20 @@ public class MovieController {
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             LocalDate date,
             @RequestParam(value = "genre", required = false)
-            String genre
+            String genre,
+            @RequestParam("cinemaId")
+            UUID cinemaId
     ) {
-        return ResponseEntity.ok(movieService.getMoviesForDateAndGenres(date, genre));
+        return ResponseEntity.ok(movieService.getMoviesForDateAndGenres(date, genre, cinemaId));
     }
 
     @GetMapping("/public/movie/showtimes")
     public ResponseEntity<MovieShowtimesDTO> getMovieWithShowtimes(
             @RequestParam(value = "slug", required = false)
-            String slug
+            String slug,
+            @RequestParam("cinemaId")
+            UUID cinemaId
     ) {
-        return ResponseEntity.ok(movieService.getMovieForSlug(slug));
+        return ResponseEntity.ok(movieService.getMovieForSlug(slug, cinemaId));
     }
 }

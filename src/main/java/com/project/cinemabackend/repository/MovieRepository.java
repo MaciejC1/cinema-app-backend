@@ -44,32 +44,40 @@ public interface MovieRepository extends JpaRepository<Movie, UUID> {
     Movie findMovieBySlug(String slug);
 
     @Query("""
-        SELECT DISTINCT m
-        FROM Movie m
-        LEFT JOIN FETCH m.movieGenres g
-        LEFT JOIN FETCH m.showtimes s
-        WHERE s.startTime >= :date AND s.startTime < :endDate
-        AND (:genreName IS NULL OR g.genre.name = :genreName)
-    """)
+    SELECT DISTINCT m
+    FROM Movie m
+    LEFT JOIN FETCH m.movieGenres g
+    LEFT JOIN FETCH m.showtimes s
+    LEFT JOIN s.hall h
+    WHERE s.startTime >= :date
+      AND s.startTime < :endDate
+      AND h.cinema.id = :cinemaId
+      AND (:genreName IS NULL OR g.genre.name = :genreName)
+""")
     List<Movie> findMoviesByDateAndGenre(
             @Param("date") OffsetDateTime date,
             @Param("endDate") OffsetDateTime endDate,
-            @Param("genreName") String genreName
+            @Param("genreName") String genreName,
+            @Param("cinemaId") UUID cinemaId
     );
 
     @Query("""
     SELECT DISTINCT m
     FROM Movie m
     LEFT JOIN FETCH m.showtimes s
+    LEFT JOIN FETCH s.hall h
     LEFT JOIN FETCH m.movieGenres mg
     LEFT JOIN FETCH mg.genre g
     WHERE m.slug = :slug
       AND m.isActive = TRUE
       AND s.isActive = TRUE
+      AND h.cinema.id = :cinemaId
     ORDER BY s.startTime ASC
 """)
     Movie findMovieWithShowtimesBySlug(
-            @Param("slug") String slug
+            @Param("slug") String slug,
+            @Param("cinemaId") UUID cinemaId
     );
+
 
 }
