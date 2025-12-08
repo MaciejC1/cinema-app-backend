@@ -3,13 +3,13 @@ package com.project.cinemabackend.controller;
 import com.project.cinemabackend.dto.MovieDTO;
 import com.project.cinemabackend.dto.MovieDetailsDTO;
 import com.project.cinemabackend.dto.MovieMinimalDTO;
+import com.project.cinemabackend.dto.MovieShowtimesDTO;
 import com.project.cinemabackend.service.MovieService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,5 +41,24 @@ public class MovieController {
     @GetMapping("/public/movies/upcoming")
     public ResponseEntity<List<MovieMinimalDTO>> getMoviesByIsUpcoming() {
         return ResponseEntity.ok(movieService.findMinMoviesIsUpcoming());
+    }
+
+    @GetMapping("/public/movies/showtimes")
+    public ResponseEntity<List<MovieShowtimesDTO>> getFilteredMoviesWithShowtimes(
+            @RequestParam("date")
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate date,
+            @RequestParam(value = "genre", required = false)
+            String genre
+    ) {
+        return ResponseEntity.ok(movieService.getMoviesForDateAndGenres(date, genre));
+    }
+
+    @GetMapping("/public/movie/showtimes")
+    public ResponseEntity<MovieShowtimesDTO> getMovieWithShowtimes(
+            @RequestParam(value = "slug", required = false)
+            String slug
+    ) {
+        return ResponseEntity.ok(movieService.getMovieForSlug(slug));
     }
 }

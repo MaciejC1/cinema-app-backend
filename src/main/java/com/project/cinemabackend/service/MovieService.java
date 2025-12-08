@@ -1,12 +1,16 @@
 package com.project.cinemabackend.service;
 
-import com.project.cinemabackend.dto.MovieDTO;
-import com.project.cinemabackend.dto.MovieDetailsDTO;
-import com.project.cinemabackend.dto.MovieMinimalDTO;
+import com.project.cinemabackend.dto.*;
 import com.project.cinemabackend.mapper.MovieMapper;
+import com.project.cinemabackend.mapper.ShowtimeMapper;
+import com.project.cinemabackend.model.Movie;
+import com.project.cinemabackend.model.Showtime;
 import com.project.cinemabackend.repository.MovieRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,10 +18,12 @@ import java.util.UUID;
 public class MovieService {
     private final MovieRepository movieRepository;
     private final MovieMapper movieMapper;
+    private final ShowtimeMapper showtimeMapper;
 
-    MovieService(MovieRepository movieRepository, MovieMapper  movieMapper) {
+    MovieService(MovieRepository movieRepository, MovieMapper  movieMapper, ShowtimeMapper showtimeMapper) {
         this.movieRepository = movieRepository;
         this.movieMapper = movieMapper;
+        this.showtimeMapper = showtimeMapper;
     }
 
     public List<MovieDTO> findMoviesIsActive() {
@@ -35,5 +41,15 @@ public class MovieService {
 
     public List<MovieMinimalDTO> findMinMoviesIsUpcoming() {
         return movieMapper.toMinimalDtoList(movieRepository.findByIsUpcomingTrue());
+    }
+
+    public List<MovieShowtimesDTO> getMoviesForDateAndGenres(LocalDate date, String genre) {
+        OffsetDateTime dateConverted = date.atStartOfDay().atOffset(ZoneOffset.UTC);
+        OffsetDateTime endDateConverted = dateConverted.plusDays(1);
+        return movieMapper.toDtoMoviesShowtimesList(movieRepository.findMoviesByDateAndGenre(dateConverted,endDateConverted, genre));
+    }
+
+    public MovieShowtimesDTO getMovieForSlug(String slug) {
+        return movieMapper.toDtoMoviesShowtimes(movieRepository.findMovieWithShowtimesBySlug(slug));
     }
 }

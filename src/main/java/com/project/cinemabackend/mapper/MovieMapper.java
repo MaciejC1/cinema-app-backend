@@ -1,9 +1,6 @@
 package com.project.cinemabackend.mapper;
 
-import com.project.cinemabackend.dto.MediaDTO;
-import com.project.cinemabackend.dto.MovieDTO;
-import com.project.cinemabackend.dto.MovieDetailsDTO;
-import com.project.cinemabackend.dto.MovieMinimalDTO;
+import com.project.cinemabackend.dto.*;
 import com.project.cinemabackend.model.Media;
 import com.project.cinemabackend.model.Movie;
 import com.project.cinemabackend.model.MovieDirector;
@@ -14,7 +11,7 @@ import org.mapstruct.Mapping;
 import java.util.List;
 import java.util.Set;
 
-@Mapper()
+@Mapper(uses = {ShowtimeMapper.class})
 public interface MovieMapper {
 
     @Mapping(target = "directors", expression = "java(mapDirectors(movie.getMovieDirectors()))")
@@ -32,6 +29,13 @@ public interface MovieMapper {
     @Mapping(target = "poster", expression = "java(mapPoster(movie.getMedia()))")
     MovieMinimalDTO toMinimalDto(Movie movie);
     List<MovieMinimalDTO> toMinimalDtoList(List<Movie> movies);
+
+
+    @Mapping(target = "poster", expression = "java(mapPoster(movie.getMedia()))")
+    @Mapping(target = "genres", expression = "java(mapGenres(movie.getMovieGenres()))")
+    @Mapping(target = "showtimes", source = "showtimes")
+    MovieShowtimesDTO toDtoMoviesShowtimes(Movie movie);
+    List<MovieShowtimesDTO> toDtoMoviesShowtimesList(List<Movie> movies);
 
     default List<String> mapDirectors(Set<MovieDirector> directors) {
         return directors.stream()
@@ -67,5 +71,3 @@ public interface MovieMapper {
                 .orElse("");
     }
 }
-
-

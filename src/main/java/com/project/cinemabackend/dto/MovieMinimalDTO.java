@@ -13,5 +13,4 @@ public record MovieMinimalDTO(
         @NotNull BigDecimal averageRating,
         @NotBlank String poster,
         @NotBlank String slug
-) {
-}
+) {}
