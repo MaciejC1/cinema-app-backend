@@ -56,6 +56,14 @@ public class Showtime {
     @Column(name = "language", length = 50)
     private String language;
 
+    @Column(name = "has_subtitles", nullable = false)
+    @ColumnDefault("false")
+    private Boolean hasSubtitles;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "audio_track", length = 20, nullable = false)
+    private AudioTrackType audioTrack;
+
     @Column(name = "subtitles", length = 50)
     private String subtitles;
 

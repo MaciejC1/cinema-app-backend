@@ -1,6 +1,7 @@
 package com.project.cinemabackend.dto;
 
-import java.time.LocalDate;
+import com.project.cinemabackend.model.AudioTrackType;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -10,5 +11,7 @@ public record ShowtimeDTO(
         boolean is3d,
         String language,
         String subtitles,
+        boolean hasSubtitles,
+        AudioTrackType audioTrack,
         String hallName
 ) {}
