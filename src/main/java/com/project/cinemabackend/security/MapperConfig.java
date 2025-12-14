@@ -20,5 +20,11 @@ public class MapperConfig {
 
     @Bean
     public ShowtimeMapper showtimeMapper() {return Mappers.getMapper(ShowtimeMapper.class);}
+
+    @Bean
+    public MovieTagMapper movieTagMapper() {return Mappers.getMapper(MovieTagMapper.class);}
+
+    @Bean
+    public RatingMapper  ratingMapper() {return Mappers.getMapper(RatingMapper.class);}
 }
 

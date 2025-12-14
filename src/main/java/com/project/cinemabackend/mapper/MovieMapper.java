@@ -1,10 +1,8 @@
 package com.project.cinemabackend.mapper;
 
 import com.project.cinemabackend.dto.*;
-import com.project.cinemabackend.model.Media;
-import com.project.cinemabackend.model.Movie;
-import com.project.cinemabackend.model.MovieDirector;
-import com.project.cinemabackend.model.MovieGenre;
+import com.project.cinemabackend.dto.ai.MovieAiDTO;
+import com.project.cinemabackend.model.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -37,6 +35,11 @@ public interface MovieMapper {
     MovieShowtimesDTO toDtoMoviesShowtimes(Movie movie);
     List<MovieShowtimesDTO> toDtoMoviesShowtimesList(List<Movie> movies);
 
+    @Mapping(target = "genres", expression = "java(mapGenres(movie.getMovieGenres()))")
+    @Mapping(target = "tags", expression = "java(mapTags(movie.getMovieTags()))")
+    MovieAiDTO toMovieAiDto(Movie movie);
+    List<MovieAiDTO> toMovieAiDtoList(List<Movie> movies);
+
     default List<String> mapDirectors(Set<MovieDirector> directors) {
         return directors.stream()
                 .map(d -> d.getDirector().getName())
@@ -48,6 +51,13 @@ public interface MovieMapper {
                 .map(g -> g.getGenre().getName())
                 .toList();
     }
+
+    default List<String> mapTags(Set<MovieTag> tags) {
+        return tags.stream()
+                .map(t -> t.getTag().getName())
+                .toList();
+    }
+
 
     default String mapBackdrop(Set<Media> media) {
         return media.stream()

@@ -11,5 +11,6 @@ public record MovieShowtimesDTO(
         String poster,
         String ageRating,
         List<String> genres,
-        List<ShowtimeDTO> showtimes
+        List<ShowtimeDTO> showtimes,
+        String slug
 ) {}
