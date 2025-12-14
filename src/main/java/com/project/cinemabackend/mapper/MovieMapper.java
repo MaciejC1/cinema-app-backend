@@ -40,6 +40,10 @@ public interface MovieMapper {
     MovieAiDTO toMovieAiDto(Movie movie);
     List<MovieAiDTO> toMovieAiDtoList(List<Movie> movies);
 
+    @Mapping(target = "poster", expression = "java(mapPoster(movie.getMedia()))")
+    MovieSurveyDTO toMovieSurveyDto(Movie movie);
+    List<MovieSurveyDTO> toMovieSurveyDtoList(List<Movie> movies);
+
     default List<String> mapDirectors(Set<MovieDirector> directors) {
         return directors.stream()
                 .map(d -> d.getDirector().getName())

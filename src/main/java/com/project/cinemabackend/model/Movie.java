@@ -60,6 +60,10 @@ public class Movie {
     private Boolean isActive;
 
     @ColumnDefault("false")
+    @Column(name = "is_recommended")
+    private  Boolean isRecommended; //bierze udział w ankiecie
+
+    @ColumnDefault("false")
     @Column(name = "is_upcoming")
     private Boolean isUpcoming;
 

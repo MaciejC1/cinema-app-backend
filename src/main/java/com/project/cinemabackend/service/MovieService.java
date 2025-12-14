@@ -52,4 +52,8 @@ public class MovieService {
     public MovieShowtimesDTO getMovieForSlug(String slug, UUID cinemaId) {
         return movieMapper.toDtoMoviesShowtimes(movieRepository.findMovieWithShowtimesBySlug(slug, cinemaId));
     }
+
+    public List<MovieSurveyDTO> getMoviesIsRecommended() {
+        return movieMapper.toMovieSurveyDtoList(movieRepository.findAllByIsRecommendedIsTrue());
+    }
 }

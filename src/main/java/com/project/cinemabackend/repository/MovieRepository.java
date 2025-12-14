@@ -79,5 +79,5 @@ public interface MovieRepository extends JpaRepository<Movie, UUID> {
             @Param("cinemaId") UUID cinemaId
     );
 
-
+    List<Movie> findAllByIsRecommendedIsTrue();
 }

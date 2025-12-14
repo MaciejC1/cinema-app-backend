@@ -1,9 +1,6 @@
 package com.project.cinemabackend.controller;
 
-import com.project.cinemabackend.dto.MovieDTO;
-import com.project.cinemabackend.dto.MovieDetailsDTO;
-import com.project.cinemabackend.dto.MovieMinimalDTO;
-import com.project.cinemabackend.dto.MovieShowtimesDTO;
+import com.project.cinemabackend.dto.*;
 import com.project.cinemabackend.service.MovieService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -64,5 +61,10 @@ public class MovieController {
             UUID cinemaId
     ) {
         return ResponseEntity.ok(movieService.getMovieForSlug(slug, cinemaId));
+    }
+
+    @GetMapping("/public/movies/survey")
+    public ResponseEntity<List<MovieSurveyDTO>> getAllMovies() {
+        return ResponseEntity.ok(movieService.getMoviesIsRecommended());
     }
 }

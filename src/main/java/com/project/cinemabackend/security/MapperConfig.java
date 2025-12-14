@@ -26,5 +26,8 @@ public class MapperConfig {
 
     @Bean
     public RatingMapper  ratingMapper() {return Mappers.getMapper(RatingMapper.class);}
+
+    @Bean
+    public GenreMapper  genreMapper() {return Mappers.getMapper(GenreMapper.class);}
 }
 
