@@ -28,6 +28,7 @@ public class MovieEmbeddingService {
     private MovieEmbeddingRepository movieEmbeddingRepository;
 
     public void generateEmbeddingsForAllMovies() {
+        // Pobranie wszystkich gatunków i tagów z bazy
         List<String> allGenres = StreamSupport.stream(genreRepository.findAll().spliterator(), false)
                 .map(g -> g.getName())
                 .collect(Collectors.toList());
@@ -36,42 +37,49 @@ public class MovieEmbeddingService {
                 .map(Tag::getName)
                 .collect(Collectors.toList());
 
-        printVectorMapping(allGenres, allTags);
+        // Tworzymy mapowanie indeksów na cechy
+        Map<Integer, String> vectorMapping = createVectorMapping(allGenres, allTags);
+
+        printVectorMapping(vectorMapping);
 
         List<Movie> movies = StreamSupport.stream(movieRepository.findAll().spliterator(), false)
                 .collect(Collectors.toList());
 
         for (Movie movie : movies) {
             double[] embedding = generateEmbeddingForMovie(movie, allGenres, allTags);
-            saveEmbeddingToDatabase(movie, embedding);
+            saveEmbeddingToDatabase(movie, embedding, vectorMapping);
             System.out.println("Movie: " + movie.getId() + " -> " + Arrays.toString(embedding));
         }
     }
 
-    private void printVectorMapping(List<String> allGenres, List<String> allTags) {
-        System.out.println("=== VECTOR INDEX MAPPING ===");
-
+    private Map<Integer, String> createVectorMapping(List<String> allGenres, List<String> allTags) {
+        Map<Integer, String> mapping = new LinkedHashMap<>();
         for (int i = 0; i < allGenres.size(); i++) {
-            System.out.println("Index " + i + " -> Genre: " + allGenres.get(i));
+            mapping.put(i, "Genre: " + allGenres.get(i));
         }
-
         for (int i = 0; i < allTags.size(); i++) {
-            System.out.println("Index " + (allGenres.size() + i) + " -> Tag: " + allTags.get(i));
+            mapping.put(allGenres.size() + i, "Tag: " + allTags.get(i));
         }
+        return mapping;
+    }
+
+    private void printVectorMapping(Map<Integer, String> mapping) {
+        System.out.println("=== VECTOR INDEX MAPPING ===");
+        mapping.forEach((index, feature) -> System.out.println("Index " + index + " -> " + feature));
     }
 
     private double[] generateEmbeddingForMovie(Movie movie, List<String> allGenres, List<String> allTags) {
         int size = allGenres.size() + allTags.size();
         double[] vector = new double[size];
 
-        //Kodwanie gatunkow
+        // Kodowanie gatunków
         for (var mg : movie.getMovieGenres()) {
             String genreName = mg.getGenre().getName();
             int index = allGenres.indexOf(genreName);
             if (index >= 0) vector[index] = 1.0;
         }
 
-        //Kodwanie tagow
+        // Kodowanie tagów
         for (var mt : movie.getMovieTags()) {
             String tagName = mt.getTag().getName();
             int index = allTags.indexOf(tagName);
@@ -81,11 +89,12 @@ public class MovieEmbeddingService {
         return vector;
     }
 
-    private void saveEmbeddingToDatabase(Movie movie, double[] embedding) {
+    private void saveEmbeddingToDatabase(Movie movie, double[] embedding, Map<Integer, String> vectorMapping) {
         MovieEmbedding me = new MovieEmbedding();
         me.setMovie(movie);
         me.setModelVersion("v1");
         me.setEmbeddingVector(embedding);
+        me.setFeatureMapping(vectorMapping); // zapis mapowania do JSONB
         me.setCreatedAt(OffsetDateTime.now());
         me.setUpdatedAt(OffsetDateTime.now());
         movieEmbeddingRepository.save(me);

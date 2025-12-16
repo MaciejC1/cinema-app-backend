@@ -1,7 +1,9 @@
 package com.project.cinemabackend.controller;
 
+import com.project.cinemabackend.dto.PreferenceStatusResponse;
 import com.project.cinemabackend.dto.UserDTO;
 import com.project.cinemabackend.security.UserPrincipal;
+import com.project.cinemabackend.service.UserEmbeddingService;
 import com.project.cinemabackend.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +19,11 @@ import java.util.UUID;
 @Slf4j
 public class UserController {
     UserService userService;
+    UserEmbeddingService userEmbeddingService;
 
-    UserController(UserService userService) {
+    UserController(UserService userService, UserEmbeddingService userEmbeddingService) {
         this.userService = userService;
+        this.userEmbeddingService = userEmbeddingService;
     }
 
     @GetMapping("/auth/me")
@@ -36,5 +40,19 @@ public class UserController {
         UserDTO userDTO = userService.getCurrentUser(userId);
 
         return ResponseEntity.ok(userDTO);
+    }
+
+    @GetMapping("/preferences/status")
+    public ResponseEntity<PreferenceStatusResponse> getPreferenceStatus(
+            Authentication authentication
+    ) {
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        UUID userId = principal.getUserId();
+
+        boolean hasPreferences = userEmbeddingService.hasPreferences(userId);
+
+        return ResponseEntity.ok(
+                new PreferenceStatusResponse(hasPreferences)
+        );
     }
 }

@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface UserEmbeddingRepository extends CrudRepository<UserEmbedding, UUID> {
     Optional<UserEmbedding> findByUser_Id(UUID userId);
+
+    boolean existsByUser_Id(UUID userId);
 }

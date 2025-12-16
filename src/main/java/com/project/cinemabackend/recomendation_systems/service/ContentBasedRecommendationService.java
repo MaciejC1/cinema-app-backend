@@ -1,5 +1,6 @@
 package com.project.cinemabackend.recomendation_systems.service;
 
+import com.project.cinemabackend.dto.MovieMatchDetailedDTO;
 import com.project.cinemabackend.dto.MovieRecommendationDTO;
 import com.project.cinemabackend.model.Movie;
 import com.project.cinemabackend.model.MovieEmbedding;
@@ -14,6 +15,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static java.lang.Math.clamp;
+
 @Service
 public class ContentBasedRecommendationService {
 
@@ -25,6 +28,8 @@ public class ContentBasedRecommendationService {
 
     @Autowired
     private MovieEmbeddingRepository movieEmbeddingRepository;
+
+    private static final double MIN_DISPLAY = 0.5;
 
     public List<MovieRecommendationDTO> recommendMoviesForUser(UUID userId, int topN) {
         Optional<UserEmbedding> optionalUserEmbedding = userEmbeddingRepository.findByUser_Id(userId);
@@ -48,6 +53,67 @@ public class ContentBasedRecommendationService {
                 .sorted(Comparator.comparingDouble(MovieRecommendationDTO::getSimilarityScore).reversed())
                 .limit(topN)
                 .collect(Collectors.toList());
+    }
+
+    /*public double getUserMovieMatch(UUID userId, UUID movieId) {
+        Optional<UserEmbedding> optionalUserEmbedding = userEmbeddingRepository.findByUser_Id(userId);
+        Optional<MovieEmbedding> optionalMovieEmbedding = movieEmbeddingRepository.findByMovie_Id(movieId);
+
+        if (optionalUserEmbedding.isEmpty() || optionalMovieEmbedding.isEmpty()) {
+            throw new RuntimeException("User or Movie embedding not found");
+        }
+
+        double[] userVector = optionalUserEmbedding.get().getEmbeddingVector();
+        double[] movieVector = optionalMovieEmbedding.get().getEmbeddingVector();
+
+        return cosineSimilarity(userVector, movieVector);
+    }*/
+
+    public MovieMatchDetailedDTO getUserMovieMatch(UUID userId, UUID movieId) {
+        Optional<UserEmbedding> optionalUserEmbedding = userEmbeddingRepository.findByUser_Id(userId);
+        Optional<MovieEmbedding> optionalMovieEmbedding = movieEmbeddingRepository.findByMovie_Id(movieId);
+
+        if (optionalUserEmbedding.isEmpty() || optionalMovieEmbedding.isEmpty()) {
+            throw new RuntimeException("User or Movie embedding not found");
+        }
+
+        double[] userVector = optionalUserEmbedding.get().getEmbeddingVector();
+        double[] targetMovieVector = optionalMovieEmbedding.get().getEmbeddingVector();
+        String movieTitle = optionalMovieEmbedding.get().getMovie().getTitle();
+
+        double similarityScore = cosineSimilarity(userVector, targetMovieVector);
+
+        List<Movie> activeMovies = movieRepository.findAllByIsActiveTrue();
+        List<Double> allSimilarities = activeMovies.stream()
+                .map(Movie::getMovieEmbedding)
+                .filter(Objects::nonNull)
+                .map(me -> cosineSimilarity(userVector, me.getEmbeddingVector()))
+                .toList();
+
+        double min = allSimilarities.stream().mapToDouble(Double::doubleValue).min().orElse(0);
+        double max = allSimilarities.stream().mapToDouble(Double::doubleValue).max().orElse(1);
+
+        double similarityNormalized;
+
+        if (max == min) {
+            similarityNormalized = 1.0;
+        } else {
+            similarityNormalized = MIN_DISPLAY
+                    + ((similarityScore - min) / (max - min)) * (1.0 - MIN_DISPLAY);
+        }
+
+        similarityNormalized = clamp(similarityNormalized, 0.0, 1.0);
+
+        String similarityPercentage = String.format("%.2f%%", similarityScore * 100);
+        String normalizedPercentage = String.format("%.2f%%", similarityNormalized * 100);
+
+        return new MovieMatchDetailedDTO(
+                movieTitle,
+                similarityScore,
+                similarityPercentage,
+                similarityNormalized,
+                normalizedPercentage
+        );
     }
 
     private double cosineSimilarity(double[] a, double[] b) {

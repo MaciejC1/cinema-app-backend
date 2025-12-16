@@ -80,4 +80,6 @@ public interface MovieRepository extends JpaRepository<Movie, UUID> {
     );
 
     List<Movie> findAllByIsRecommendedIsTrue();
+
+    List<Movie> findAllByIsActiveTrue();
 }

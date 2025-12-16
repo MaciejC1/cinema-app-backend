@@ -10,6 +10,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.type.SqlTypes;
 
 import java.time.OffsetDateTime;
+import java.util.Map;
 import java.util.UUID;
 
 @Getter
@@ -39,4 +40,8 @@ public class MovieEmbedding {
 
     @Column(name = "embedding_vector", columnDefinition = "double precision[]")
     private double[] embeddingVector;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "feature_mapping", columnDefinition = "jsonb")
+    private Map<Integer, String> featureMapping;
 }
