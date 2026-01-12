@@ -35,6 +35,13 @@ public class RecommendationSystemController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/content-based/all")
+    public ResponseEntity<List<MovieMatchDetailedDTO>> getAllContentBasedMatches(@RequestParam UUID userId) {
+        List<MovieMatchDetailedDTO> matches = recommendationService.recommendAllMoviesForUser(userId);
+        return ResponseEntity.ok(matches);
+    }
+
 }
 
 

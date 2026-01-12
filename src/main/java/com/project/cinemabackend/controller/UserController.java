@@ -1,5 +1,6 @@
 package com.project.cinemabackend.controller;
 
+import com.project.cinemabackend.dto.GenrePreferenceDto;
 import com.project.cinemabackend.dto.PreferenceStatusResponse;
 import com.project.cinemabackend.dto.UserDTO;
 import com.project.cinemabackend.security.UserPrincipal;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -55,4 +57,14 @@ public class UserController {
                 new PreferenceStatusResponse(hasPreferences)
         );
     }
+
+    @GetMapping("/preferences/genres")
+    public ResponseEntity<List<GenrePreferenceDto>> getUserGenrePreference (Authentication authentication)
+    {
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        UUID userId = principal.getUserId();
+
+        return ResponseEntity.ok(userService.getFavoriteGenresForUser(userId));
+    }
+
 }

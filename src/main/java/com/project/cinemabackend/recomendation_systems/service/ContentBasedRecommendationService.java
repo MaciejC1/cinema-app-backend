@@ -116,6 +116,47 @@ public class ContentBasedRecommendationService {
         );
     }
 
+    public List<MovieMatchDetailedDTO> recommendAllMoviesForUser(UUID userId) {
+        Optional<UserEmbedding> optionalUserEmbedding = userEmbeddingRepository.findByUser_Id(userId);
+        if (optionalUserEmbedding.isEmpty()) return Collections.emptyList();
+
+        double[] userVector = optionalUserEmbedding.get().getEmbeddingVector();
+        List<Movie> activeMovies = movieRepository.findAllByIsActiveTrue();
+
+        List<Double> allSimilarities = activeMovies.stream()
+                .map(Movie::getMovieEmbedding)
+                .filter(Objects::nonNull)
+                .map(me -> cosineSimilarity(userVector, me.getEmbeddingVector()))
+                .toList();
+
+        double min = allSimilarities.stream().mapToDouble(Double::doubleValue).min().orElse(0);
+        double max = allSimilarities.stream().mapToDouble(Double::doubleValue).max().orElse(1);
+
+        List<MovieMatchDetailedDTO> results = new ArrayList<>();
+
+        for (Movie movie : activeMovies) {
+            MovieEmbedding me = movie.getMovieEmbedding();
+            if (me == null) continue;
+
+            double similarityScore = cosineSimilarity(userVector, me.getEmbeddingVector());
+            double similarityNormalized = (max == min) ? 1.0 :
+                    MIN_DISPLAY + ((similarityScore - min) / (max - min)) * (1.0 - MIN_DISPLAY);
+            similarityNormalized = clamp(similarityNormalized, 0.0, 1.0);
+
+            results.add(new MovieMatchDetailedDTO(
+                    movie.getTitle(),
+                    similarityScore,
+                    String.format("%.2f%%", similarityScore * 100),
+                    similarityNormalized,
+                    String.format("%.2f%%", similarityNormalized * 100)
+            ));
+        }
+
+        return results.stream()
+                .sorted(Comparator.comparingDouble(MovieMatchDetailedDTO::similarityScore).reversed())
+                .toList();
+    }
+
     private double cosineSimilarity(double[] a, double[] b) {
         if (a.length != b.length) throw new IllegalArgumentException("Vectors must be the same size");
         double dot = 0.0, normA = 0.0, normB = 0.0;
