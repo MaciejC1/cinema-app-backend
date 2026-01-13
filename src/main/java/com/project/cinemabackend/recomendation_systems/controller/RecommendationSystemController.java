@@ -3,6 +3,7 @@ package com.project.cinemabackend.recomendation_systems.controller;
 import com.project.cinemabackend.dto.MovieMatchDetailedDTO;
 import com.project.cinemabackend.dto.MovieRecommendationDTO;
 import com.project.cinemabackend.dto.RecommendationRequest;
+import com.project.cinemabackend.recomendation_systems.service.CollaborativeFilteringRecommendationService;
 import com.project.cinemabackend.recomendation_systems.service.ContentBasedRecommendationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ public class RecommendationSystemController {
 
     @Autowired
     private ContentBasedRecommendationService recommendationService;
+    @Autowired
+    private CollaborativeFilteringRecommendationService collaborativeFilteringRecommendationService;
 
     @PostMapping("/user")
     public List<MovieRecommendationDTO> getUserRecommendations(@RequestBody RecommendationRequest request) {
@@ -41,6 +44,12 @@ public class RecommendationSystemController {
         List<MovieMatchDetailedDTO> matches = recommendationService.recommendAllMoviesForUser(userId);
         return ResponseEntity.ok(matches);
     }
+    @GetMapping("/collaborative-filtering/all")
+    public ResponseEntity<List<MovieMatchDetailedDTO>> getAllCollaborativeFilteringMatches(@RequestParam UUID userId) {
+        List<MovieMatchDetailedDTO> matches = collaborativeFilteringRecommendationService.recommendAllMoviesForUser(userId);
+        return ResponseEntity.ok(matches);
+    }
+
 
 }
 
