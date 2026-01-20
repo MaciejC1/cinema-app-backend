@@ -182,46 +182,16 @@ public class AiRecommendationService {
                          "predicted_rating": 3.9
                        },
                        {
-                         "movieId": "f2c5fc19-db82-4b39-a776-cc9db48d6e5e",
-                         "title": "Obecność 4: Ostatnie namaszczenie",
-                         "match_percent": 78,
-                         "predicted_rating": 3.8
-                       },
-                       {
-                         "movieId": "39491384-c791-464d-9ab1-dd99cac2b529",
-                         "title": "Harry Potter i Insygnia Śmierci: Część II",
-                         "match_percent": 74,
-                         "predicted_rating": 4.1
-                       },
-                       {
                          "movieId": "95793864-cbd3-4906-a880-c97391e5df2c",
                          "title": "Pan Wilk i spółka 2",
                          "match_percent": 70,
                          "predicted_rating": 3.5
                        },
                        {
-                         "movieId": "f74c356b-6b63-4cd6-9ac4-2814341fa99c",
-                         "title": "Shrek Trzeci",
-                         "match_percent": 68,
-                         "predicted_rating": 3.4
-                       },
-                       {
-                         "movieId": "75101571-3bf1-464e-a73c-b4f7f612795d",
-                         "title": "Król Lew",
-                         "match_percent": 65,
-                         "predicted_rating": 3.8
-                       },
-                       {
                          "movieId": "fdd89b6b-c3f8-4d57-a32f-8fade4566ab5",
                          "title": "Świąteczny skok",
                          "match_percent": 62,
                          "predicted_rating": 3.2
-                       },
-                       {
-                         "movieId": "e6c9d562-8a47-4b41-9115-20a6345c0487",
-                         "title": "Kac Vegas",
-                         "match_percent": 60,
-                         "predicted_rating": 3.1
                        },
                        {
                          "movieId": "71337d67-c114-4558-8373-401a6055841e",
@@ -240,18 +210,6 @@ public class AiRecommendationService {
                          "title": "Zwierzogród 2",
                          "match_percent": 54,
                          "predicted_rating": 2.8
-                       },
-                       {
-                         "movieId": "9923d82e-ca8e-4615-96e9-f7f9311483ee",
-                         "title": "Ojciec chrzestny",
-                         "match_percent": 50,
-                         "predicted_rating": 4.0
-                       },
-                       {
-                         "movieId": "daa06fe0-f8f4-435c-bdea-395a9aebe817",
-                         "title": "Skazani na Shawshank",
-                         "match_percent": 50,
-                         "predicted_rating": 4.0
                        }
                      ]
             """;

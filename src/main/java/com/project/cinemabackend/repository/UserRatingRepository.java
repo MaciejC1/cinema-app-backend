@@ -9,4 +9,5 @@ import java.util.UUID;
 
 public interface UserRatingRepository extends JpaRepository<UserRating, UUID> {
     List<UserRating> findTop15ByUserIdOrderByCreatedAtDesc(UUID userId);
+    List<UserRating> findAllByMovie_Id(UUID movieId);
 }

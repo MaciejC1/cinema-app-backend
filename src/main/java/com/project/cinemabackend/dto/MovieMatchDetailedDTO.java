@@ -2,9 +2,9 @@ package com.project.cinemabackend.dto;
 
 public record MovieMatchDetailedDTO(
         String movieTitle,
-        double similarityScore,
+        Double similarityScore,
         String similarityPercentage,
-        double similarityNormalized,
+        Double similarityNormalized,
         String similarityNormalizedPercentage
 ) {}
 
