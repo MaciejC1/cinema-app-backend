@@ -26,10 +26,10 @@ public class BookingSeat {
     @JoinColumn(name = "booking_id", nullable = false)
     private Booking booking;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "showtime_id", nullable = false)
-    private Showtime showtime;
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @JoinColumn(name = "showtime_id", nullable = false)
+//    private Showtime showtime;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -38,6 +38,12 @@ public class BookingSeat {
 
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
+
+    @Enumerated(EnumType.STRING)
+    private TicketStatus status;
+
+    @Column(nullable = false, unique = true)
+    private UUID ticketCode;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")

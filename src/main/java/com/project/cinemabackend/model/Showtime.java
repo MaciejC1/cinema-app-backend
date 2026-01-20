@@ -75,7 +75,7 @@ public class Showtime {
     @Column(name = "is_active")
     private Boolean isActive;
 
-    @OneToMany(mappedBy = "showtime")
-    private Set<BookingSeat> bookingSeats = new LinkedHashSet<>();
+//    @OneToMany(mappedBy = "showtime")
+//    private Set<BookingSeat> bookingSeats = new LinkedHashSet<>();
 
 }

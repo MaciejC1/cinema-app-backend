@@ -1,4 +1,4 @@
-package com.project.cinemabackend.security;
+package com.project.cinemabackend.config;
 
 import com.theokanning.openai.service.OpenAiService;
 import org.springframework.beans.factory.annotation.Value;

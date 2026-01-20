@@ -1,4 +1,4 @@
-package com.project.cinemabackend.security;
+package com.project.cinemabackend.config;
 
 import com.project.cinemabackend.mapper.*;
 import org.mapstruct.factory.Mappers;
@@ -29,5 +29,9 @@ public class MapperConfig {
 
     @Bean
     public GenreMapper  genreMapper() {return Mappers.getMapper(GenreMapper.class);}
+
+    @Bean
+    public PayUMapper payUMapper() {return Mappers.getMapper(PayUMapper.class);}
+
 }
 

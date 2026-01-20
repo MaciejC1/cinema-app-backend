@@ -21,10 +21,10 @@ public class Payment {
     @Column(name = "payment_id", nullable = false)
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "booking_id", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "booking_id", nullable = false, unique = true)
     private Booking booking;
+
 
     @Column(name = "amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
@@ -39,8 +39,10 @@ public class Payment {
     @Column(name = "transaction_id")
     private String transactionId;
 
-    @Column(name = "payment_gateway", length = 50)
-    private String paymentGateway;
+    private String provider; // payu
+
+    @Column(name = "payment_url", length = 800)
+    private String paymentUrl;
 
     @Column(name = "paid_at")
     private OffsetDateTime paidAt;
@@ -49,4 +51,6 @@ public class Payment {
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
 
+    @Column(name = "expires_at")
+    private OffsetDateTime expiresAt;
 }

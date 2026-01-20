@@ -9,9 +9,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -34,9 +32,11 @@ public class Booking {
     @Column(name = "guest_phone", length = 20)
     private String guestPhone;
 
-    @ColumnDefault("'reserved'")
-    @Column(name = "status", nullable = false, length = 20)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private BookingStatus status;
+
+    @ManyToOne(optional = false)
+    private Showtime showtime;
 
     @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;
@@ -55,10 +55,9 @@ public class Booking {
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 
-    @OneToMany(mappedBy = "booking")
-    private Set<BookingSeat> bookingSeats = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BookingSeat> seats = new ArrayList<>();
 
-    @OneToMany(mappedBy = "booking")
-    private Set<Payment> payments = new LinkedHashSet<>();
-
+    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Payment payment;
 }
