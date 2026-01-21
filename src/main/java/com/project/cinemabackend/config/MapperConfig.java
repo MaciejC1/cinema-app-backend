@@ -33,5 +33,14 @@ public class MapperConfig {
     @Bean
     public PayUMapper payUMapper() {return Mappers.getMapper(PayUMapper.class);}
 
+    @Bean
+    public SeatMapper seatMapper() {return Mappers.getMapper(SeatMapper.class);}
+
+    @Bean
+    public BookingMapper bookingMapper() {return Mappers.getMapper(BookingMapper.class);}
+
+    @Bean
+    public BookingSeatMapper bookingSeatMapper() {return Mappers.getMapper(BookingSeatMapper.class);}
+
 }
 

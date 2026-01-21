@@ -135,8 +135,6 @@ public class AiRecommendationService {
             ]
             """);
 
-        /*
-        // Zakomentowana sekcja wysyłająca zapytanie do OpenAI:
         List<ChatMessage> prompts = List.of(
                 new ChatMessage(
                         "system",
@@ -164,76 +162,27 @@ public class AiRecommendationService {
 
         String jsonResponse =
                 result.getChoices().get(0).getMessage().getContent();
-        */
 
-            // Stała odpowiedź JSON (mock)
-            String jsonResponse = """
-                    [
-                       {
-                         "movieId": "fb372204-1104-4bda-a8c9-004a1ac2ffc4",
-                         "title": "Until Dawn",
-                         "match_percent": 85,
-                         "predicted_rating": 4.2
-                       },
-                       {
-                         "movieId": "f8ad4db2-afd7-43c7-bb2f-fae632990e92",
-                         "title": "Good Boy",
-                         "match_percent": 80,
-                         "predicted_rating": 3.9
-                       },
-                       {
-                         "movieId": "95793864-cbd3-4906-a880-c97391e5df2c",
-                         "title": "Pan Wilk i spółka 2",
-                         "match_percent": 70,
-                         "predicted_rating": 3.5
-                       },
-                       {
-                         "movieId": "fdd89b6b-c3f8-4d57-a32f-8fade4566ab5",
-                         "title": "Świąteczny skok",
-                         "match_percent": 62,
-                         "predicted_rating": 3.2
-                       },
-                       {
-                         "movieId": "71337d67-c114-4558-8373-401a6055841e",
-                         "title": "TRON: Ares",
-                         "match_percent": 58,
-                         "predicted_rating": 3.0
-                       },
-                       {
-                         "movieId": "2b262dab-bf2b-4492-b525-8ad494075156",
-                         "title": "Predator: Strefa zagrożenia",
-                         "match_percent": 56,
-                         "predicted_rating": 2.9
-                       },
-                       {
-                         "movieId": "1cbf8776-64bb-4392-a0a1-7e004af011e1",
-                         "title": "Zwierzogród 2",
-                         "match_percent": 54,
-                         "predicted_rating": 2.8
-                       }
-                     ]
-            """;
 
-            System.out.println(jsonResponse);
+        System.out.println(jsonResponse);
 
-            // zabezpieczenie przed markdown
-            jsonResponse = jsonResponse
-                    .replace("```json", "")
-                    .replace("```", "")
-                    .trim();
+        jsonResponse = jsonResponse
+                .replace("```json", "")
+                .replace("```", "")
+                .trim();
 
-            List<AiResponse> responses =
-                    objectMapper.readValue(
-                            jsonResponse,
-                            new TypeReference<List<AiResponse>>() {}
-                    );
+        List<AiResponse> responses =
+                objectMapper.readValue(
+                        jsonResponse,
+                        new TypeReference<List<AiResponse>>() {}
+                );
 
-            AiResponseValidator.validate(responses);
+        AiResponseValidator.validate(responses);
 
-            log.info("AI recommendations generated successfully for userId={}, count={}",
-                    userId, responses.size());
+        log.info("AI recommendations generated successfully for userId={}, count={}",
+                userId, responses.size());
 
-            return responses;
+        return responses;
 
         } catch (Exception e) {
 

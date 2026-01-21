@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -57,8 +58,13 @@ public class BookingController {
         }
     }
 
-//    @GetMapping
-//    public ResponseEntity<LastBookingDTO> getBookings() {
-//
-//    }
+    @GetMapping("/{bookingCode}")
+    public ResponseEntity<LastBookingDTO> getBookings(
+            @PathVariable String bookingCode
+    ) {
+
+        LastBookingDTO lastBookingDTO = bookingService.getLastBooking(bookingCode);
+
+        return ResponseEntity.ok(lastBookingDTO);
+    }
 }

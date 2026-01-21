@@ -2,6 +2,7 @@ package com.project.cinemabackend.service;
 
 import ch.qos.logback.core.net.server.Client;
 import com.project.cinemabackend.config.PayUProperties;
+import com.project.cinemabackend.dto.LastBookingDTO;
 import com.project.cinemabackend.dto.payu.*;
 import com.project.cinemabackend.exception.BookingNotFoundException;
 import com.project.cinemabackend.exception.PaymentException;
@@ -22,6 +23,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -36,6 +38,7 @@ public class BookingService {
     private final ShowtimeRepository showtimeRepository;
     private final PaymentRepository paymentRepository;
     private final UserRepository userRepository;
+    private final BookingMapper bookingMapper;
 
     public BookingService(PayUService payUService,
                           PayUProperties payUProperties,
@@ -56,6 +59,7 @@ public class BookingService {
         this.showtimeRepository = showtimeRepository;
         this.paymentRepository = paymentRepository;
         this.userRepository = userRepository;
+        this.bookingMapper = bookingMapper;
     }
 
     @Transactional
@@ -273,6 +277,18 @@ public class BookingService {
         paymentRepository.save(payment);
     }
 
+    public LastBookingDTO getLastBooking(String code) {
+        Optional<Booking> bookingOptional = bookingRepository.findByBookingCode(code);
+        if (bookingOptional.isPresent()) {
+            Booking booking = bookingOptional.get();
+            LastBookingDTO lastBookingDTO = bookingMapper.toLastBookingDTO(booking);
+           // booking.setBookingCode(null);
+           // bookingRepository.save(booking);
 
+            return lastBookingDTO;
+        }
+
+        return null;
+    }
 
 }

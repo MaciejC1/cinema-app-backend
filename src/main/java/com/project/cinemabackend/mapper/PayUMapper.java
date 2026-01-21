@@ -14,33 +14,6 @@ import java.util.UUID;
 
 @Mapper()
 public interface PayUMapper {
-
-//    @Mapping(target = "email", source = "guestEmail")
-//    @Mapping(target = "phone", source = "guestPhone")
-//    @Mapping(target = "firstName", source = "guestFirstName")
-//    @Mapping(target = "lastName", source = "guestLastName")
-//    @Mapping(target = "language", constant = "pl")
-//    PayUOrderRequest.Buyer toBuyer(BookingRequest request);
-//
-//    @Mapping(target = "name", expression = "java(buildProductName(bookingSeat))")
-//    @Mapping(target = "unitPrice", expression = "java(convertToGrosze(bookingSeat.getPrice()))")
-//    @Mapping(target = "quantity", constant = "1")
-//    PayUOrderRequest.Product toProduct(BookingSeat bookingSeat);
-//
-//    List<PayUOrderRequest.Product> toProducts(List<BookingSeat> bookingSeats);
-//
-//    default String buildProductName(BookingSeat bookingSeat) {
-//        Seat seat = bookingSeat.getSeat();
-//        return "Miejsce " + seat.getRowNumber() + "-" + seat.getSeatNumber();
-//    }
-//
-//    default String convertToGrosze(BigDecimal amount) {
-//        return amount
-//                .multiply(new BigDecimal("100"))
-//                .toBigInteger()
-//                .toString();
-//    }
-
     @Mapping(target = "continueUrl", ignore = true)
     @Mapping(target = "notifyUrl", ignore = true)
     @Mapping(target = "customerIp", source = "request.customerIp")

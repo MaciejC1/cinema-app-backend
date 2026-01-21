@@ -13,5 +13,6 @@ public record ShowtimeDTO(
         String subtitles,
         boolean hasSubtitles,
         AudioTrackType audioTrack,
+        String screenType,
         String hallName
 ) {}
