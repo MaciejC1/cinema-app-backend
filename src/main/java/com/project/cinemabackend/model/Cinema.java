@@ -57,5 +57,4 @@ public class Cinema {
 
     @OneToMany(mappedBy = "preferredCinema")
     private Set<User> users = new LinkedHashSet<>();
-
 }

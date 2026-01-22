@@ -1,6 +1,5 @@
 package com.project.cinemabackend.service;
 
-import ch.qos.logback.core.net.server.Client;
 import com.project.cinemabackend.config.PayUProperties;
 import com.project.cinemabackend.dto.LastBookingDTO;
 import com.project.cinemabackend.dto.payu.*;
@@ -14,6 +13,7 @@ import com.project.cinemabackend.repository.*;
 import com.project.cinemabackend.security.UserPrincipal;
 import com.project.cinemabackend.util.ClientIP;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -84,13 +84,14 @@ public class BookingService {
                 throw new SeatNotAvailableException("Seat " + seat.getId() + " is not available");
             } else {
                 List<BookingSeat> bkSeats = bookingSeatRepository.findAllById(request.getSeatIds());
-                if(!bkSeats.isEmpty()) {
+                if(bkSeats.isEmpty()) {
+                    throw new SeatNotAvailableException("Seat " + seat.getId() + " doesn't exist");
+                } else {
                     for (BookingSeat bkSeat : bkSeats) {
-                        if(bkSeat.getStatus() == TicketStatus.VALID)
+                        if (bkSeat.getStatus() == TicketStatus.VALID)
                             throw new SeatNotAvailableException("Seat " + seat.getId() + " has already been booked");
                     }
                 }
-
             }
         }
 
@@ -282,8 +283,8 @@ public class BookingService {
         if (bookingOptional.isPresent()) {
             Booking booking = bookingOptional.get();
             LastBookingDTO lastBookingDTO = bookingMapper.toLastBookingDTO(booking);
-           // booking.setBookingCode(null);
-           // bookingRepository.save(booking);
+            booking.setBookingCode(null);
+            bookingRepository.save(booking);
 
             return lastBookingDTO;
         }

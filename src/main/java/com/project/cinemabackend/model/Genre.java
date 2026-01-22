@@ -32,5 +32,4 @@ public class Genre {
 
     @OneToMany(mappedBy = "genre")
     private Set<MovieGenre> movieGenres = new LinkedHashSet<>();
-
 }

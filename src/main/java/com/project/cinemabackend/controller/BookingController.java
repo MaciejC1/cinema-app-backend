@@ -9,6 +9,7 @@ import com.project.cinemabackend.dto.payu.PayUNotification;
 import com.project.cinemabackend.service.BookingService;
 import com.project.cinemabackend.service.PayUService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -59,6 +60,7 @@ public class BookingController {
     }
 
     @GetMapping("/{bookingCode}")
+
     public ResponseEntity<LastBookingDTO> getBookings(
             @PathVariable String bookingCode
     ) {
