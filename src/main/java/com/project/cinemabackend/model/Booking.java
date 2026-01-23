@@ -35,6 +35,7 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
 
+    @JoinColumn(name = "showtime_id")
     @ManyToOne(optional = false)
     private Showtime showtime;
 

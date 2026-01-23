@@ -8,6 +8,6 @@ import java.util.List;
 
 @Mapper()
 public interface MovieTagMapper {
-    TagMinimalDTO toTagMinimalDTO(Tag tag);
-    List<TagMinimalDTO> toTagMinimalDTOList(List<Tag> tags);
+    TagMinimalDTO toTagMinimalDto(Tag tag);
+    List<TagMinimalDTO> toTagMinimalDtoList(List<Tag> tags);
 }

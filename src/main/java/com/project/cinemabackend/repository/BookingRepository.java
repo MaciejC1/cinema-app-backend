@@ -16,19 +16,6 @@ import java.util.UUID;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, UUID> {
-//    @Query("""
-//    SELECT DISTINCT b
-//    FROM Booking b
-//    LEFT JOIN FETCH m.movieGenres g
-//    LEFT JOIN FETCH m.showtimes s
-//    LEFT JOIN s.hall h
-//    WHERE s.startTime >= :date
-//      AND s.startTime < :endDate
-//      AND h.cinema.id = :cinemaId
-//      AND (:genreName IS NULL OR g.genre.name = :genreName)
-//""")
-
-
     @EntityGraph(attributePaths = {
             "showtime",
             "showtime.movie",

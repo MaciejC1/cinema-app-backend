@@ -3,8 +3,6 @@ package com.project.cinemabackend.service;
 import com.project.cinemabackend.dto.*;
 import com.project.cinemabackend.mapper.MovieMapper;
 import com.project.cinemabackend.mapper.ShowtimeMapper;
-import com.project.cinemabackend.model.Movie;
-import com.project.cinemabackend.model.Showtime;
 import com.project.cinemabackend.repository.MovieRepository;
 import org.springframework.stereotype.Service;
 
@@ -46,11 +44,11 @@ public class MovieService {
     public List<MovieShowtimesDTO> getMoviesForDateAndGenres(LocalDate date, String genre, UUID cinemaId) {
         OffsetDateTime dateConverted = date.atStartOfDay().atOffset(ZoneOffset.UTC);
         OffsetDateTime endDateConverted = dateConverted.plusDays(1);
-        return movieMapper.toDtoMoviesShowtimesList(movieRepository.findMoviesByDateAndGenre(dateConverted,endDateConverted, genre, cinemaId));
+        return movieMapper.toMoviesShowtimesListDto(movieRepository.findMoviesByDateAndGenre(dateConverted,endDateConverted, genre, cinemaId));
     }
 
     public MovieShowtimesDTO getMovieForSlug(String slug, UUID cinemaId) {
-        return movieMapper.toDtoMoviesShowtimes(movieRepository.findMovieWithShowtimesBySlug(slug, cinemaId));
+        return movieMapper.toMoviesShowtimesDto(movieRepository.findMovieWithShowtimesBySlug(slug, cinemaId));
     }
 
     public List<MovieSurveyDTO> getMoviesIsRecommended() {

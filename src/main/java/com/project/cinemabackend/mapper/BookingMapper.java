@@ -11,6 +11,6 @@ public interface BookingMapper {
     @Mapping(target = "cinema", source = "showtime.hall.cinema")
     @Mapping(target = "movie", source = "showtime.movie")
     @Mapping(target = "amount", source = "totalAmount")
-    LastBookingDTO toLastBookingDTO(Booking booking);
+    LastBookingDTO toLastBookingDto(Booking booking);
 }
 

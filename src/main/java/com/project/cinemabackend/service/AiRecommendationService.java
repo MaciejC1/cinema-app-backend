@@ -56,7 +56,7 @@ public class AiRecommendationService {
 
         try {
             List<TagMinimalDTO> tags =
-                    movieTagMapper.toTagMinimalDTOList((List<Tag>) tagRepository.findAll());
+                    movieTagMapper.toTagMinimalDtoList((List<Tag>) tagRepository.findAll());
 
             List<MovieAiDTO> moviesAiDTOs =
                     movieMapper.toMovieAiDtoList(movieRepository.findByIsActiveTrue());

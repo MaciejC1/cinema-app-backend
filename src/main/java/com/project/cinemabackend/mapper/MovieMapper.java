@@ -32,8 +32,8 @@ public interface MovieMapper {
     @Mapping(target = "poster", expression = "java(mapPoster(movie.getMedia()))")
     @Mapping(target = "genres", expression = "java(mapGenres(movie.getMovieGenres()))")
     @Mapping(target = "showtimes", source = "showtimes")
-    MovieShowtimesDTO toDtoMoviesShowtimes(Movie movie);
-    List<MovieShowtimesDTO> toDtoMoviesShowtimesList(List<Movie> movies);
+    MovieShowtimesDTO toMoviesShowtimesDto(Movie movie);
+    List<MovieShowtimesDTO> toMoviesShowtimesListDto(List<Movie> movies);
 
     @Mapping(target = "genres", expression = "java(mapGenres(movie.getMovieGenres()))")
     @Mapping(target = "tags", expression = "java(mapTags(movie.getMovieTags()))")

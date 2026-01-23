@@ -13,11 +13,12 @@ import com.project.cinemabackend.repository.*;
 import com.project.cinemabackend.security.UserPrincipal;
 import com.project.cinemabackend.util.ClientIP;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -279,17 +280,14 @@ public class BookingService {
     }
 
     public LastBookingDTO getLastBooking(String code) {
-        Optional<Booking> bookingOptional = bookingRepository.findByBookingCode(code);
-        if (bookingOptional.isPresent()) {
-            Booking booking = bookingOptional.get();
-            LastBookingDTO lastBookingDTO = bookingMapper.toLastBookingDTO(booking);
-            booking.setBookingCode(null);
-            bookingRepository.save(booking);
+        Booking booking = bookingRepository.findByBookingCode(code)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Booking not found"));
 
-            return lastBookingDTO;
-        }
+        LastBookingDTO dto = bookingMapper.toLastBookingDto(booking);
+        booking.setBookingCode(null);
+        bookingRepository.save(booking);
 
-        return null;
+        return dto;
     }
 
 }

@@ -26,11 +26,6 @@ public class BookingSeat {
     @JoinColumn(name = "booking_id", nullable = false)
     private Booking booking;
 
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JoinColumn(name = "showtime_id", nullable = false)
-//    private Showtime showtime;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "seat_id", nullable = false)

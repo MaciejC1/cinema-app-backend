@@ -14,9 +14,9 @@ public interface BookingSeatMapper {
 
     @Mapping(target = "seat", source = "seat")
     @Mapping(target = "qrCode", expression = "java(generateQrCode(bookingSeat.getTicketCode().toString()))")
-    BookingSeatDTO toBookingSeatDTO(BookingSeat bookingSeat);
+    BookingSeatDTO toBookingSeatDto(BookingSeat bookingSeat);
 
-    List <BookingSeatDTO> toBookingSeatDTOList(List<BookingSeat> bookingSeats);
+    List <BookingSeatDTO> toBookingSeatDtoList(List<BookingSeat> bookingSeats);
 
     default byte[] generateQrCode(String code) {
         return QrGenerator.generateQr(code);
