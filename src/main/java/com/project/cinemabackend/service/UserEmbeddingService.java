@@ -189,4 +189,39 @@ public class UserEmbeddingService {
         saveUserVector(user, userVector, vectorMapping);
         System.out.println("User (from survey): " + user.getEmail() + ", Embedding: " + Arrays.toString(userVector));
     }
+
+    @Transactional
+    public void updateUserEmbeddingAfterRating(UUID userId, UUID movieId, int ratingValue) {
+
+        UserEmbedding userEmbedding = userEmbeddingRepository.findByUser_Id(userId)
+                .orElseThrow(() -> new RuntimeException("User embedding not found"));
+
+        MovieEmbedding movieEmbedding = movieEmbeddingRepository
+                .findByMovie_Id(movieId)
+                .orElseThrow(() -> new RuntimeException("Movie embedding not found"));
+
+        double[] userVector = userEmbedding.getEmbeddingVector();
+        double[] movieVector = movieEmbedding.getEmbeddingVector();
+
+        List<String> allGenres = StreamSupport.stream(genreRepository.findAll().spliterator(), false)
+                .map(Genre::getName)
+                .toList();
+
+        for (int i = 0; i < movieVector.length; i++) {
+            double weight = i < allGenres.size() ? GENRE_WEIGHT : TAG_WEIGHT;
+            userVector[i] += movieVector[i] * ratingValue * weight;
+        }
+
+        double sum = Arrays.stream(userVector).sum();
+        if (sum > 0) {
+            for (int i = 0; i < userVector.length; i++) {
+                userVector[i] /= sum;
+            }
+        }
+
+        userEmbedding.setEmbeddingVector(userVector);
+        userEmbedding.setUpdatedAt(OffsetDateTime.now());
+        userEmbeddingRepository.save(userEmbedding);
+    }
+
 }
