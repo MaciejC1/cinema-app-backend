@@ -140,7 +140,7 @@ public class UserEmbeddingService {
                 UUID movieId = rating.getMovieId();
                 double ratingValue = rating.getRating();
 
-                Movie movie = movieRepository.findById(movieId)
+               Movie movie = movieRepository.findById(movieId)
                         .orElseThrow(() -> new RuntimeException("Movie not found"));
 
                 UserRating userRating = userRatingRepository

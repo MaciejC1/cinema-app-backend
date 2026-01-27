@@ -15,7 +15,6 @@ import java.util.UUID;
 @Table(name = "user_ratings", schema = "public")
 public class UserRating {
     @Id
-    @GeneratedValue
     @Column(name = "rating_id", nullable = false)
     private UUID id;
 

@@ -28,7 +28,6 @@ public class MovieEmbeddingService {
     private MovieEmbeddingRepository movieEmbeddingRepository;
 
     public void generateEmbeddingsForAllMovies() {
-        // Pobranie wszystkich gatunków i tagów z bazy
         List<String> allGenres = StreamSupport.stream(genreRepository.findAll().spliterator(), false)
                 .map(g -> g.getName())
                 .collect(Collectors.toList());
@@ -37,7 +36,6 @@ public class MovieEmbeddingService {
                 .map(Tag::getName)
                 .collect(Collectors.toList());
 
-        // Tworzymy mapowanie indeksów na cechy
         Map<Integer, String> vectorMapping = createVectorMapping(allGenres, allTags);
 
         printVectorMapping(vectorMapping);
@@ -72,14 +70,12 @@ public class MovieEmbeddingService {
         int size = allGenres.size() + allTags.size();
         double[] vector = new double[size];
 
-        // Kodowanie gatunków
         for (var mg : movie.getMovieGenres()) {
             String genreName = mg.getGenre().getName();
             int index = allGenres.indexOf(genreName);
             if (index >= 0) vector[index] = 1.0;
         }
 
-        // Kodowanie tagów
         for (var mt : movie.getMovieTags()) {
             String tagName = mt.getTag().getName();
             int index = allTags.indexOf(tagName);
@@ -94,7 +90,7 @@ public class MovieEmbeddingService {
         me.setMovie(movie);
         me.setModelVersion("v1");
         me.setEmbeddingVector(embedding);
-        me.setFeatureMapping(vectorMapping); // zapis mapowania do JSONB
+        me.setFeatureMapping(vectorMapping);
         me.setCreatedAt(OffsetDateTime.now());
         me.setUpdatedAt(OffsetDateTime.now());
         movieEmbeddingRepository.save(me);
