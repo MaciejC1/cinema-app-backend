@@ -13,7 +13,12 @@ import com.project.cinemabackend.repository.*;
 import com.project.cinemabackend.security.UserPrincipal;
 import com.project.cinemabackend.util.ClientIP;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -103,7 +108,7 @@ public class BookingService {
         booking.setGuestPhone(request.getGuestPhone());
         booking.setStatus(BookingStatus.CREATED);
         booking.setBookingCode(generateBookingCode());
-        booking.setExpiresAt(OffsetDateTime.now().plusMinutes(2));
+        booking.setExpiresAt(OffsetDateTime.now().plusSeconds(135));
         booking.setCreatedAt(OffsetDateTime.now());
         booking.setUpdatedAt(OffsetDateTime.now());
         booking.setGuestEmail(request.getGuestEmail());
@@ -268,6 +273,7 @@ public class BookingService {
         } else if ("CANCELED".equals(status)) {
             booking.setStatus(BookingStatus.CANCELLED);
             payment.setPaymentStatus("cancelled");
+            payment.setPaymentUrl(null);
 
             for (BookingSeat bookingSeat : booking.getSeats()) {
                 bookingSeat.setStatus(TicketStatus.CANCELLED);
@@ -283,11 +289,51 @@ public class BookingService {
         Booking booking = bookingRepository.findByBookingCode(code)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Booking not found"));
 
+        if(!booking.getStatus().equals(BookingStatus.PAID)) {
+            return null;
+        }
+
         LastBookingDTO dto = bookingMapper.toLastBookingDto(booking);
         booking.setBookingCode(null);
         bookingRepository.save(booking);
 
         return dto;
+    }
+
+    public Page<LastBookingDTO> getHistoryBookingList(
+            Authentication authentication,
+            BookingStatus status,
+            OffsetDateTime from,
+            OffsetDateTime to,
+            BigDecimal minAmount,
+            BigDecimal maxAmount,
+            Pageable pageable
+    ) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "User not authenticated"
+            );
+        }
+
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        UUID userId = principal.getUserId();
+
+
+        Pageable sorted = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(Sort.Direction.DESC, "createdAt")
+        );
+
+        return bookingRepository.findUserBookings(
+                userId,
+                status,
+                from,
+                to,
+                minAmount,
+                maxAmount,
+                sorted).map(bookingMapper::toLastBookingDto);
     }
 
 }

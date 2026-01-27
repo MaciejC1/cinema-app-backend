@@ -5,6 +5,8 @@ import com.project.cinemabackend.model.Booking;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 
 @Mapper(uses = {ShowtimeMapper.class, MovieMapper.class, CinemaMapper.class, BookingSeatMapper.class, SeatMapper.class })
 public interface BookingMapper {
@@ -12,5 +14,6 @@ public interface BookingMapper {
     @Mapping(target = "movie", source = "showtime.movie")
     @Mapping(target = "amount", source = "totalAmount")
     LastBookingDTO toLastBookingDto(Booking booking);
+    List<LastBookingDTO> toLastBookingDtoList(List<Booking> bookings);
 }
 
