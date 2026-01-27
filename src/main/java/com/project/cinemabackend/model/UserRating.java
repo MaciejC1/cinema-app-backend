@@ -1,11 +1,10 @@
 package com.project.cinemabackend.model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -16,7 +15,7 @@ import java.util.UUID;
 @Table(name = "user_ratings", schema = "public")
 public class UserRating {
     @Id
-    @ColumnDefault("uuid_generate_v4()")
+    @GeneratedValue
     @Column(name = "rating_id", nullable = false)
     private UUID id;
 
@@ -38,10 +37,12 @@ public class UserRating {
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
+    @CreationTimestamp
     private OffsetDateTime createdAt;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "updated_at")
+    @UpdateTimestamp
     private OffsetDateTime updatedAt;
 
 }

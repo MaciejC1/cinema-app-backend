@@ -1,5 +1,6 @@
 package com.project.cinemabackend.repository;
 
+import com.project.cinemabackend.model.Booking;
 import com.project.cinemabackend.model.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
@@ -19,4 +20,9 @@ public interface UserRepository extends CrudRepository<User, UUID> {
     @EntityGraph(attributePaths = {"userRoles", "userRoles.role"})
     @Query("SELECT u FROM User u WHERE u.id = :userId")
     Optional<User> findByIdWithRoles(@Param("userId") UUID userId);
+
+    @EntityGraph(attributePaths = {
+            "bookings.showtime.movie.userRatings",
+    })
+    User findUserWithMoviesById(UUID userId);
 }

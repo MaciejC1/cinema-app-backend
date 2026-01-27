@@ -4,6 +4,7 @@ import com.project.cinemabackend.dto.*;
 import com.project.cinemabackend.service.MovieService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -66,5 +67,10 @@ public class MovieController {
     @GetMapping("/public/movies/survey")
     public ResponseEntity<List<MovieSurveyDTO>> getAllMovies() {
         return ResponseEntity.ok(movieService.getMoviesIsRecommended());
+    }
+
+    @GetMapping("/user/movies/rating")
+    public ResponseEntity<List<RatingMovieDTO>> getAllMoviesWithRatingByUser(Authentication authentication) {
+        return ResponseEntity.ok(movieService.getMoviesWithRatingByUser(authentication));
     }
 }

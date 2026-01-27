@@ -1,9 +1,7 @@
 package com.project.cinemabackend.repository;
 
-import com.project.cinemabackend.dto.LastBookingDTO;
 import com.project.cinemabackend.model.Booking;
 import com.project.cinemabackend.model.BookingStatus;
-import com.project.cinemabackend.model.Movie;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -44,7 +41,6 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
       AND b.totalAmount >= COALESCE(:minAmount, b.totalAmount)
       AND b.totalAmount <= COALESCE(:maxAmount, b.totalAmount)
 """)
-
     Page<Booking> findUserBookings(
             @Param("userId") UUID userId,
             @Param("status") BookingStatus status,
@@ -54,6 +50,4 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
             @Param("maxAmount") BigDecimal maxAmount,
             Pageable pageable
     );
-
-
 }
