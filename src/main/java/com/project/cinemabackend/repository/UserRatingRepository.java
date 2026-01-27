@@ -15,4 +15,5 @@ public interface UserRatingRepository extends JpaRepository<UserRating, UUID> {
     List<UserRating> findAllByMovie_Id(UUID movieId);
     Optional<UserRating> findUserRatingByMovie_IdAndUser_Id(UUID movieId, UUID userId);
     Optional<UserRating> findUserRatingByMovieIdAndUserId(UUID movieId, UUID userId);
+    Optional<UserRating> findByUser_IdAndMovie_Id(UUID userId, UUID movieId);
 }
