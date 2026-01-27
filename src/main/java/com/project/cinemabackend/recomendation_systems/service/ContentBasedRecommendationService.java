@@ -30,6 +30,7 @@ public class ContentBasedRecommendationService {
     private MovieEmbeddingRepository movieEmbeddingRepository;
 
     private static final double MIN_DISPLAY = 0.5;
+    private static final double MAX_DISPLAY = 0.95;
 
     public List<MovieRecommendationDTO> recommendMoviesForUser(UUID userId, int topN) {
         Optional<UserEmbedding> optionalUserEmbedding = userEmbeddingRepository.findByUser_Id(userId);
@@ -141,7 +142,8 @@ public class ContentBasedRecommendationService {
             double similarityScore = cosineSimilarity(userVector, me.getEmbeddingVector());
             double similarityNormalized = (max == min) ? 1.0 :
                     MIN_DISPLAY + ((similarityScore - min) / (max - min)) * (1.0 - MIN_DISPLAY);
-            similarityNormalized = clamp(similarityNormalized, 0.0, 1.0);
+
+            similarityNormalized = clamp(similarityNormalized, MIN_DISPLAY, MAX_DISPLAY);
 
             results.add(new MovieMatchDetailedDTO(
                     movie.getTitle(),

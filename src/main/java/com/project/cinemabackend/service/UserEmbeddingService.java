@@ -1,15 +1,9 @@
 package com.project.cinemabackend.service;
 
 import com.project.cinemabackend.dto.SurveyRequest;
-import com.project.cinemabackend.model.Tag;
-import com.project.cinemabackend.model.User;
-import com.project.cinemabackend.model.UserEmbedding;
-import com.project.cinemabackend.model.UserRating;
-import com.project.cinemabackend.repository.GenreRepository;
-import com.project.cinemabackend.repository.MovieEmbeddingRepository;
-import com.project.cinemabackend.repository.TagRepository;
-import com.project.cinemabackend.repository.UserEmbeddingRepository;
-import com.project.cinemabackend.repository.UserRepository;
+import com.project.cinemabackend.model.*;
+import com.project.cinemabackend.repository.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +25,10 @@ public class UserEmbeddingService {
     private GenreRepository genreRepository;
     @Autowired
     private TagRepository tagRepository;
+    @Autowired
+    private MovieRepository movieRepository;
+    @Autowired
+    private UserRatingRepository userRatingRepository;
 
     private static final double GENRE_WEIGHT = 2.0;
     private static final double TAG_WEIGHT = 1.0;
@@ -39,7 +37,6 @@ public class UserEmbeddingService {
     public void generateUserVectors() {
         List<User> users = (List<User>) userRepository.findAll();
 
-        // Pobieramy wszystkie gatunki i tagi
         List<String> allGenres = StreamSupport.stream(genreRepository.findAll().spliterator(), false)
                 .map(g -> g.getName())
                 .collect(Collectors.toList());
@@ -48,7 +45,6 @@ public class UserEmbeddingService {
                 .map(Tag::getName)
                 .collect(Collectors.toList());
 
-        // Tworzymy mapowanie indeksów na cechy
         Map<Integer, String> vectorMapping = createVectorMapping(allGenres, allTags);
         printVectorMapping(vectorMapping);
 
@@ -72,7 +68,6 @@ public class UserEmbeddingService {
                 });
             }
 
-            // Normalizacja wektora
             double sum = Arrays.stream(userVector).sum();
             if (sum > 0) {
                 for (int i = 0; i < userVector.length; i++) {
@@ -122,11 +117,11 @@ public class UserEmbeddingService {
                 .orElse(0);
     }
 
+    @Transactional
     public void createUserEmbeddingFromSurvey(UUID userId, SurveyRequest surveyRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Pobieramy wszystkie gatunki i tagi
         List<String> allGenres = StreamSupport.stream(genreRepository.findAll().spliterator(), false)
                 .map(g -> g.getName())
                 .collect(Collectors.toList());
@@ -140,11 +135,30 @@ public class UserEmbeddingService {
         int vectorLength = allGenres.size() + allTags.size();
         double[] userVector = new double[vectorLength];
 
-        // Uwzględniamy oceny filmów z ankiety
         if (surveyRequest.getRatings() != null) {
             for (SurveyRequest.MovieRating rating : surveyRequest.getRatings()) {
                 UUID movieId = rating.getMovieId();
                 double ratingValue = rating.getRating();
+
+                Movie movie = movieRepository.findById(movieId)
+                        .orElseThrow(() -> new RuntimeException("Movie not found"));
+
+                UserRating userRating = userRatingRepository
+                        .findByUser_IdAndMovie_Id(userId, movieId)
+                        .orElseGet(() -> {
+                            UserRating ur = new UserRating();
+                            ur.setId(UUID.randomUUID());
+                            ur.setUser(user);
+                            ur.setMovie(movie);
+                            ur.setCreatedAt(OffsetDateTime.now());
+                            return ur;
+                        });
+
+                userRating.setRating((int) ratingValue);
+                userRating.setReviewText(null);
+                userRating.setUpdatedAt(OffsetDateTime.now());
+
+                userRatingRepository.save(userRating);
 
                 movieEmbeddingRepository.findByMovie_Id(movieId).ifPresent(me -> {
                     double[] movieVector = me.getEmbeddingVector();
@@ -156,7 +170,6 @@ public class UserEmbeddingService {
             }
         }
 
-        // Podbijamy ulubione gatunki
         if (surveyRequest.getFavouriteGenres() != null) {
             for (String favGenre : surveyRequest.getFavouriteGenres()) {
                 int index = allGenres.indexOf(favGenre);
@@ -166,7 +179,6 @@ public class UserEmbeddingService {
             }
         }
 
-        // Normalizacja wektora
         double sum = Arrays.stream(userVector).sum();
         if (sum > 0) {
             for (int i = 0; i < userVector.length; i++) {
@@ -174,7 +186,6 @@ public class UserEmbeddingService {
             }
         }
 
-        // Zapisujemy embedding użytkownika
         saveUserVector(user, userVector, vectorMapping);
         System.out.println("User (from survey): " + user.getEmail() + ", Embedding: " + Arrays.toString(userVector));
     }
