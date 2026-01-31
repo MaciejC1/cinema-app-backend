@@ -13,7 +13,7 @@ import java.util.UUID;
 public interface UserRatingRepository extends JpaRepository<UserRating, UUID> {
     List<UserRating> findTop15ByUserIdOrderByCreatedAtDesc(UUID userId);
     List<UserRating> findAllByMovie_Id(UUID movieId);
-    Optional<UserRating> findUserRatingByMovie_IdAndUser_Id(UUID movieId, UUID userId);
+    Optional<UserRating> findByMovie_IdAndUser_Id(UUID movieId, UUID userId);
     Optional<UserRating> findUserRatingByMovieIdAndUserId(UUID movieId, UUID userId);
     Optional<UserRating> findByUser_IdAndMovie_Id(UUID userId, UUID movieId);
 }

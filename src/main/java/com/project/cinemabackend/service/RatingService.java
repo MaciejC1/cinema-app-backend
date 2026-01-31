@@ -49,7 +49,7 @@ public class RatingService {
         Movie  movie = optionalMovie.orElseThrow();
         User user = em.getReference(User.class, userId);
 
-        Optional<UserRating> existingRating = userRatingRepository.findUserRatingByMovie_IdAndUser_Id(movieId, userId);
+        Optional<UserRating> existingRating = userRatingRepository.findByMovie_IdAndUser_Id(movieId, userId);
         if(existingRating.isEmpty()) {
             movie.setRatingCount(movie.getRatingCount() + 1);
         }

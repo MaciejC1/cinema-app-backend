@@ -84,20 +84,13 @@ public class BookingService {
         if (seats.size() != request.getSeatIds().size()) {
             throw new SeatNotAvailableException("Some seats not found");
         }
-
+        List<BookingSeat> bkSeats = bookingSeatRepository.findBookingSeatsBySeat_IdIn(request.getSeatIds());
         for (Seat seat : seats) {
             if (!seat.getIsAvailable()) {
                 throw new SeatNotAvailableException("Seat " + seat.getId() + " is not available");
-            } else {
-                List<BookingSeat> bkSeats = bookingSeatRepository.findAllById(request.getSeatIds());
-                if(bkSeats.isEmpty()) {
-                    throw new SeatNotAvailableException("Seat " + seat.getId() + " doesn't exist");
-                } else {
-                    for (BookingSeat bkSeat : bkSeats) {
-                        if (bkSeat.getStatus() == TicketStatus.VALID)
-                            throw new SeatNotAvailableException("Seat " + seat.getId() + " has already been booked");
-                    }
-                }
+            }
+            if (bkSeats.stream().anyMatch(bs -> bs.getStatus() == TicketStatus.VALID)) {
+                throw new SeatNotAvailableException("Seat " + seat.getId() + " has already been booked");
             }
         }
 
