@@ -143,7 +143,7 @@ public class AuthService {
                     return new UsernameNotFoundException("Użytkownik nie znaleziony");
                 });
 
-        if (user.getUpdatedAt() != null && createdAt.isBefore(user.getUpdatedAt().toInstant())) {
+        if (user.getUpdatedAt() != null && createdAt.isBefore(user.getPasswChangedAt().toInstant())) {
             invalidateRefreshToken(refreshToken, user, "password_changed");
             clearCookies(response);
             log.info("Token invalidated due to password change for user: {}", user.getEmail());

@@ -59,6 +59,9 @@ public class User {
     @Column(name = "last_login")
     private OffsetDateTime lastLogin;
 
+    @Column(name = "passw_changed_at")
+    private OffsetDateTime passwChangedAt;
+
     @ColumnDefault("true")
     @Column(name = "is_active")
     private Boolean isActive;
