@@ -19,8 +19,13 @@ public interface SeatMapper {
 
 
     @Mapping(target = "rowNumber", source = "rowNumber")
-    @Mapping(target = "isAvailableForShowtime",
-            expression = "java(bookingSeats.stream().noneMatch(bs -> bs.getSeat().getId().equals(seat.getId()) && bs.getStatus().equals(com.project.cinemabackend.model.TicketStatus.VALID)))")
+    @Mapping(
+            target = "isAvailableForShowtime",
+            expression = "java(bookingSeats.stream().noneMatch(bs -> " +
+                    "bs.getSeat().getId().equals(seat.getId()) && " +
+                    "java.util.Objects.equals(bs.getStatus(), com.project.cinemabackend.model.TicketStatus.VALID)" +
+                    "))"
+    )
     SeatShowtimeDTO toSeatShowtimeDto(Seat seat, @Context List<BookingSeat> bookingSeats);
     List<SeatShowtimeDTO> toSeatShowtimeDtoList(List<Seat> seats, @Context List<BookingSeat> bookingSeats);
 

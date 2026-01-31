@@ -135,6 +135,7 @@ public class BookingService {
             bookingSeat.setPrice(price);
             bookingSeat.setTicketCode(UUID.randomUUID());
             bookingSeat.setCreatedAt(OffsetDateTime.now());
+            bookingSeat.setStatus(TicketStatus.PENDING);
 
             bookingSeats.add(bookingSeat);
         }
