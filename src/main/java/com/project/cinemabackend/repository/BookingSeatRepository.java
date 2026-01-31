@@ -11,14 +11,17 @@ import java.util.UUID;
 
 @Repository
 public interface BookingSeatRepository extends JpaRepository<BookingSeat, UUID> {
-    @Query("""
-    SELECT bs
-    FROM BookingSeat bs
-    JOIN bs.booking b
-    WHERE b.showtime.id = :showtimeId
-""")
-    Set<BookingSeat> findBookedSeats(UUID showtimeId);
+//    @Query("""
+//    SELECT bs
+//    FROM BookingSeat bs
+//    JOIN bs.booking b
+//    WHERE b.showtime.id = :showtimeId
+//""")
+//    Set<BookingSeat> findBookedSeats(UUID showtimeId);
+
+    Set<BookingSeat> findBookingSeatsByBooking_Showtime_Id(UUID showtimeId);
 
     List<BookingSeat> findBookingSeatsBySeat_IdIn(List<UUID> seatIds);
+    List<BookingSeat> findBookingSeatsBySeat_IdInAndBooking_Showtime_Id(List<UUID> seatIds, UUID showtime_id);
 
 }

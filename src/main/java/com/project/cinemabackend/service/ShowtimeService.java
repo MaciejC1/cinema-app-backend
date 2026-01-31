@@ -47,7 +47,7 @@ public class ShowtimeService {
         Showtime showtime = showtimeRepository.findShowtimeById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Showtime not found"));
 
-        Set<BookingSeat> bookingSeats = bookingSeatRepository.findBookedSeats(showtime.getId());
+        Set<BookingSeat> bookingSeats = bookingSeatRepository.findBookingSeatsByBooking_Showtime_Id(showtime.getId());
 
         return showtimeMapper.toDetailsDto(showtime, bookingSeats.stream().toList(), seatMapper);
     }

@@ -23,6 +23,7 @@ public class Payment {
 
     @OneToOne
     @JoinColumn(name = "booking_id", nullable = false, unique = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Booking booking;
 
 

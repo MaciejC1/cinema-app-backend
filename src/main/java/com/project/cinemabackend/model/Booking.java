@@ -33,6 +33,7 @@ public class Booking {
     private String guestPhone;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private BookingStatus status;
 
     @JoinColumn(name = "showtime_id")
