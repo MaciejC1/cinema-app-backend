@@ -14,6 +14,7 @@ import com.project.cinemabackend.model.Tag;
 import com.project.cinemabackend.repository.MovieRepository;
 import com.project.cinemabackend.repository.RatingRepository;
 import com.project.cinemabackend.repository.TagRepository;
+import com.project.cinemabackend.security.UserPrincipal;
 import com.project.cinemabackend.util.AiResponseValidator;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatCompletionResult;
@@ -23,7 +24,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -50,7 +55,17 @@ public class AiRecommendationService {
         this.openAiService = openAiService;
     }
 
-    public List<AiResponse> findRecommendationByAI(UUID userId) {
+    public List<AiResponse> findRecommendationByAI(Authentication authentication) {
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "User not authenticated"
+            );
+        }
+
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        UUID userId = principal.getUserId();
 
         log.info("Starting AI recommendation for userId={}", userId);
 

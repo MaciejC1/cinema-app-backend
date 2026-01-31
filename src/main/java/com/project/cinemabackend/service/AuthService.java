@@ -200,6 +200,7 @@ public class AuthService {
         User newUser =  userMapper.toEntity(request);
         String hashed = passwordEncoder.encode(newUser.getPasswordHash());
         newUser.setPasswordHash(hashed);
+        newUser.setPasswChangedAt(OffsetDateTime.now());
 
         if (request.preferredCinemaId() != null) {
             Cinema cinema = cinemaRepository.findById(request.preferredCinemaId())
