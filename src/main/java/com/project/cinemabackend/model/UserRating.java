@@ -16,6 +16,7 @@ import java.util.UUID;
 public class UserRating {
     @Id
     @Column(name = "rating_id", nullable = false)
+    @GeneratedValue
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
