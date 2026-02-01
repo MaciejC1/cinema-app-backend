@@ -113,7 +113,7 @@ public class AiRecommendationService {
 
             prompt.append("""
             
-            HISTORIA OCEN UŻYTKOWNIKA (max 15):
+            HISTORIA OCEN UŻYTKOWNIKA:
             """);
 
             prompt.append(ratedMoviesJson);

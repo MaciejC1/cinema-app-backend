@@ -147,7 +147,6 @@ public class UserEmbeddingService {
                         .findByUser_IdAndMovie_Id(userId, movieId)
                         .orElseGet(() -> {
                             UserRating ur = new UserRating();
-                            ur.setId(UUID.randomUUID());
                             ur.setUser(user);
                             ur.setMovie(movie);
                             ur.setCreatedAt(OffsetDateTime.now());
