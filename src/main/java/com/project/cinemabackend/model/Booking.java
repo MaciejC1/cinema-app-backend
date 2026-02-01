@@ -42,7 +42,7 @@ public class Booking {
     @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;
 
-    @Column(name = "booking_code", nullable = false, length = 50)
+    @Column(name = "booking_code", length = 50)
     private String bookingCode;
 
     @Column(name = "expires_at")
