@@ -24,7 +24,7 @@ public class AiRecommendationController {
         this.aiRecommendationService = aiRecommendationService;
     }
 
-    @GetMapping("/public/ai/recommendation")
+    @GetMapping("/user/ai/recommendation")
     public ResponseEntity<?> getRecommendation(Authentication authentication) {
         try {
             return ResponseEntity.ok(aiRecommendationService.findRecommendationByAI(authentication));

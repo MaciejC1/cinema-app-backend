@@ -19,7 +19,7 @@ import java.util.UUID;
 @Table(name = "showtimes", schema = "public")
 public class Showtime {
     @Id
-    @ColumnDefault("uuid_generate_v4()")
+    @GeneratedValue
     @Column(name = "showtime_id", nullable = false)
     private UUID id;
 

@@ -18,7 +18,6 @@ import java.util.UUID;
 public class UserRole {
     @Id
     @GeneratedValue
-    @ColumnDefault("uuid_generate_v4()")
     @Column(name = "user_role_id", nullable = false)
     private UUID id;
 

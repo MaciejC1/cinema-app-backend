@@ -17,7 +17,6 @@ import java.util.UUID;
 @Table(name = "directors", schema = "public")
 public class Director {
     @Id
-    @ColumnDefault("uuid_generate_v4()")
     @Column(name = "director_id", nullable = false)
     private UUID id;
 

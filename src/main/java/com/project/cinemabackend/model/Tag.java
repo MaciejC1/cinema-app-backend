@@ -16,8 +16,8 @@ import java.util.UUID;
 @Table(name = "tags", schema = "public")
 public class Tag {
     @Id
-    @ColumnDefault("uuid_generate_v4()")
     @Column(name = "tag_id", nullable = false)
+    @GeneratedValue
     private UUID id;
 
     @Column(name = "name", nullable = false, length = 100)

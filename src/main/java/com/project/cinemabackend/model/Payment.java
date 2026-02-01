@@ -17,7 +17,6 @@ import java.util.UUID;
 @Table(name = "payments", schema = "public")
 public class Payment {
     @Id
-    @ColumnDefault("uuid_generate_v4()")
     @Column(name = "payment_id", nullable = false)
     private UUID id;
 

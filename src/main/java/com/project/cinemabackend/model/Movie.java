@@ -18,8 +18,8 @@ import java.util.UUID;
 @Table(name = "movies", schema = "public")
 public class Movie {
     @Id
-    @ColumnDefault("uuid_generate_v4()")
     @Column(name = "movie_id", nullable = false)
+    @GeneratedValue
     private UUID id;
 
     @Column(name = "title", nullable = false, length = 500)

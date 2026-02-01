@@ -18,7 +18,7 @@ import java.util.UUID;
 @Table(name = "seats", schema = "public")
 public class Seat {
     @Id
-    @ColumnDefault("uuid_generate_v4()")
+    @GeneratedValue
     @Column(name = "seat_id", nullable = false)
     private UUID id;
 

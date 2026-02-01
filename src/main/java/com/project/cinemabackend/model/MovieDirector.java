@@ -15,7 +15,7 @@ import java.util.UUID;
 @Table(name = "movie_directors", schema = "public")
 public class MovieDirector {
     @Id
-    @ColumnDefault("uuid_generate_v4()")
+    @GeneratedValue
     @Column(name = "movie_director_id", nullable = false)
     private UUID id;
 

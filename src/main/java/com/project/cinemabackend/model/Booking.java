@@ -17,7 +17,6 @@ import java.util.*;
 @Table(name = "bookings", schema = "public")
 public class Booking {
     @Id
-    @ColumnDefault("uuid_generate_v4()")
     @Column(name = "booking_id", nullable = false)
     private UUID id;
 

@@ -26,6 +26,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -58,10 +59,7 @@ public class AiRecommendationService {
     public List<AiResponse> findRecommendationByAI(Authentication authentication) {
 
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNAUTHORIZED,
-                    "User not authenticated"
-            );
+            throw new AuthenticationCredentialsNotFoundException("User not authenticated");
         }
 
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();

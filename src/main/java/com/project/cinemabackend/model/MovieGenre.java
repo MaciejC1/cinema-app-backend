@@ -15,8 +15,8 @@ import java.util.UUID;
 @Table(name = "movie_genres", schema = "public")
 public class MovieGenre {
     @Id
-    @ColumnDefault("uuid_generate_v4()")
     @Column(name = "movie_genre_id", nullable = false)
+    @GeneratedValue
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
